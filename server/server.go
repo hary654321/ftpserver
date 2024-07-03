@@ -11,7 +11,7 @@ import (
 
 	"github.com/spf13/afero"
 
-	serverlib "github.com/fclairamb/ftpserverlib"
+	serverlib "github.com/fclairamb/ftpserver/ftpserver"
 	log "github.com/fclairamb/go-log"
 
 	"github.com/fclairamb/ftpserver/config"
@@ -140,6 +140,8 @@ func (s *Server) considerEnd() {
 }
 
 func (s *Server) loadFs(access *confpar.Access) (afero.Fs, error) {
+
+	s.logger.Info("在这里列出文件")
 	cache := s.accesses
 	cache.Lock()
 	defer cache.Unlock()

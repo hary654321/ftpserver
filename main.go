@@ -5,12 +5,13 @@ import (
 	"flag"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	ftpserver "github.com/fclairamb/ftpserverlib"
+	"github.com/fclairamb/ftpserver/ftpserver"
 	gkwrap "github.com/fclairamb/go-log/gokit"
 	gokit "github.com/go-kit/log"
 
@@ -133,6 +134,7 @@ func signalHandler() {
 	for {
 		sig := <-ch
 
+		log.Println("signalHandler", sig)
 		if sig == syscall.SIGTERM {
 			stop()
 
