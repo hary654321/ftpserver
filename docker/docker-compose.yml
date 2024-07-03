@@ -3,11 +3,10 @@ version: '2.3'
 services:
 
 
-  redishoneypot:
-    container_name: telnet
+  ftphoneypot:
+    container_name: ftp
     restart: always
     network_mode: "host"
-    image: "hary654321/telnet"
-    read_only: true
+    image: "hary654321/ftp"
     volumes:
-     - $PWD/data/telnet/log:/var/log/telnet
+     - $PWD/data/ftp/log:/var/log/ftp

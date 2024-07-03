@@ -4,7 +4,6 @@ package main
 import (
 	"flag"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -39,23 +38,10 @@ func main() {
 	// Setting up the logger
 	logger := gkwrap.New()
 
-	autoCreate := onlyConf
-
 	// The general idea here is that if you start it without any arg, you're probably doing a local quick&dirty run
 	// possibly on a windows machine, so we're better of just using a default file name and create the file.
 	if confFile == "" {
 		confFile = "ftpserver.json"
-		autoCreate = true
-	}
-
-	if autoCreate {
-		if _, err := os.Stat(confFile); err != nil && os.IsNotExist(err) {
-			logger.Warn("No conf file, creating one", "confFile", confFile)
-
-			if err := ioutil.WriteFile(confFile, confFileContent(), 0600); err != nil { //nolint: gomnd
-				logger.Warn("Couldn't create conf file", "confFile", confFile)
-			}
-		}
 	}
 
 	conf, errConfig := config.NewConfig(confFile, logger)
@@ -141,26 +127,4 @@ func signalHandler() {
 			break
 		}
 	}
-}
-
-func confFileContent() []byte {
-	str := `{
-  "version": 1,
-  "accesses": [
-    {
-      "user": "test",
-      "pass": "test",
-      "fs": "os",
-      "params": {
-        "basePath": "/tmp"
-      }
-    }
-  ],
-  "passive_transfer_port_range": {
-    "start": 2122,
-    "end": 2130
-  }
-}`
-
-	return []byte(str)
 }

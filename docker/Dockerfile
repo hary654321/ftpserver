@@ -2,12 +2,14 @@ FROM ubuntu:20.04
 #
 # Setup redishoneypot
 #
-COPY telnet /opt/telnet/
-COPY conf.toml /opt/telnet/
+COPY ftp /opt/ftp/
+COPY ftpserver.json /opt/ftp/
 
 # Start redishoneypot
-WORKDIR /opt/telnet
+WORKDIR /opt/ftp
 
-CMD ./telnet
+CMD ./ftp
 
 # CMD tail -f
+# docker build -t hary654321/ftp  .
+
