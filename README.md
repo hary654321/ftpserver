@@ -211,3 +211,15 @@ You can generate the TLS key pair files with the following command:
 ```bash
 openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out cert.pem -keyout key.pem
 ```
+
+
+## Testing using nmap
+```
+sudo nmap -sV -p21 -sC -A localhost
+```
+
+
+## wget
+```
+wget -r --user="USERNAME" --password="PASSWORD" ftp://localhost/
+```

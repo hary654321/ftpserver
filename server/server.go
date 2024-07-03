@@ -18,6 +18,7 @@ import (
 	"github.com/fclairamb/ftpserver/config/confpar"
 	"github.com/fclairamb/ftpserver/fs"
 	"github.com/fclairamb/ftpserver/fs/fslog"
+	"github.com/fclairamb/ftpserver/jsonlog"
 )
 
 // Server structure
@@ -87,12 +88,8 @@ func (s *Server) ClientConnected(cc serverlib.ClientContext) (string, error) {
 	s.nbClientsSync.Lock()
 	defer s.nbClientsSync.Unlock()
 	s.nbClients++
-	s.logger.Info(
-		"Client connected",
-		"clientId", cc.ID(),
-		"remoteAddr", cc.RemoteAddr(),
-		"nbClients", s.nbClients,
-	)
+
+	jsonlog.GlobalLog.HoneyLog(cc.LocalAddr().String(), cc.RemoteAddr().String(), "scan", nil)
 
 	if s.config.Content.Logging.FtpExchanges {
 		cc.SetDebug(true)
@@ -108,12 +105,8 @@ func (s *Server) ClientDisconnected(cc serverlib.ClientContext) {
 
 	s.nbClients--
 
-	s.logger.Info(
-		"Client disconnected",
-		"clientId", cc.ID(),
-		"remoteAddr", cc.RemoteAddr(),
-		"nbClients", s.nbClients,
-	)
+	jsonlog.GlobalLog.HoneyLog(cc.LocalAddr().String(), cc.RemoteAddr().String(), "close", nil)
+
 	s.considerEnd()
 }
 
@@ -169,9 +162,19 @@ func (s *Server) loadFs(access *confpar.Access) (afero.Fs, error) {
 // AuthUser authenticates the user and selects an handling driver
 func (s *Server) AuthUser(cc serverlib.ClientContext, user, pass string) (serverlib.ClientDriver, error) {
 	access, errAccess := s.config.GetAccess(user, pass)
+
+	extend := make(map[string]any)
+	extend["username"] = user
+	extend["password"] = pass
+
 	if errAccess != nil {
+		extend["succ"] = false
+		jsonlog.GlobalLog.HoneyLog(cc.LocalAddr().String(), cc.RemoteAddr().String(), "login", extend)
 		return nil, errAccess
 	}
+
+	extend["succ"] = true
+	jsonlog.GlobalLog.HoneyLog(cc.LocalAddr().String(), cc.RemoteAddr().String(), "login", extend)
 
 	accFs, errFs := s.loadFs(access)
 

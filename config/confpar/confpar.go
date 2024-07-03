@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Version: 2.0
+ * @Autor: ABing
+ * @Date: 2024-07-03 09:40:12
+ * @LastEditors: lhl
+ * @LastEditTime: 2024-07-03 10:09:57
+ */
 // Package confpar provide the core parameters of the config
 package confpar
 
@@ -55,4 +63,5 @@ type Content struct {
 	PassiveTransferPortRange *PortRange `json:"passive_transfer_port_range"` // Listen port range
 	Logging                  Logging    `json:"logging"`                     // Logging parameters
 	TLS                      *TLS       `json:"tls"`                         // TLS Config
+	LogPath                  string     `json:"logpath"`
 }

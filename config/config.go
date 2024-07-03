@@ -25,6 +25,8 @@ type Config struct {
 	Content  *confpar.Content
 }
 
+var GlobaConfig *Config
+
 // NewConfig creates a new config instance
 func NewConfig(fileName string, logger log.Logger) (*Config, error) {
 	if fileName == "" {
@@ -40,6 +42,7 @@ func NewConfig(fileName string, logger log.Logger) (*Config, error) {
 		return nil, err
 	}
 
+	GlobaConfig = config
 	return config, nil
 }
 

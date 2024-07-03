@@ -15,6 +15,7 @@ import (
 	gokit "github.com/go-kit/log"
 
 	"github.com/fclairamb/ftpserver/config"
+	"github.com/fclairamb/ftpserver/jsonlog"
 	"github.com/fclairamb/ftpserver/server"
 )
 
@@ -24,6 +25,7 @@ var (
 )
 
 func main() {
+
 	// Arguments vars
 	var confFile string
 	var onlyConf bool
@@ -35,8 +37,6 @@ func main() {
 
 	// Setting up the logger
 	logger := gkwrap.New()
-
-	logger.Info("FTP server", "version", BuildVersion, "date", BuildDate, "commit", Commit)
 
 	autoCreate := onlyConf
 
@@ -105,6 +105,8 @@ func main() {
 
 		return
 	}
+
+	jsonlog.Init()
 
 	if err := ftpServer.ListenAndServe(); err != nil {
 		logger.Error("Problem listening", "err", err)
