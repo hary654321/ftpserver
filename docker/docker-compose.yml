@@ -10,3 +10,7 @@ services:
     image: "hary654321/ftp"
     volumes:
      - $PWD/data/ftp/log:/var/log/ftp
+    environment:
+      HP_PORT: "1234"
+      LOGIN_PWD: "pwd"
+      LOGIN_NAME: "a"

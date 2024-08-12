@@ -12,6 +12,7 @@ import (
 
 	"github.com/fclairamb/ftpserver/config/confpar"
 	"github.com/fclairamb/ftpserver/fs"
+	"github.com/fclairamb/ftpserver/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -135,9 +136,8 @@ func (c *Config) HashPlaintextPasswords() error {
 // Prepare the config before using it
 func (c *Config) Prepare() error {
 	ct := c.Content
-	if ct.ListenAddress == "" {
-		ct.ListenAddress = "0.0.0.0:2121"
-	}
+
+	ct.ListenAddress = "0.0.0.0:" + utils.GetHpPortStr()
 
 	if publicHost := os.Getenv("PUBLIC_HOST"); publicHost != "" {
 		ct.PublicHost = publicHost
@@ -163,6 +163,10 @@ func (c *Config) CheckAccesses() error {
 // GetAccess return a file system access given some credentials
 func (c *Config) GetAccess(user string, pass string) (*confpar.Access, error) {
 	for _, a := range c.Content.Accesses {
+		fmt.Println(a.Pass, a.User)
+		a.Pass = utils.GetLoginPwd()
+		a.User = utils.GetLoginName()
+		fmt.Println(a.Pass, a.User)
 		if a.User == user {
 			_, errCost := bcrypt.Cost([]byte(a.Pass))
 			if errCost == nil {
